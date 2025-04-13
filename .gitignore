@@ -1,0 +1,10 @@
+#db files
+data/models/emotion_data.db
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+#cache files
+__pycache__/
+*.py[cod]
+*$py.class
