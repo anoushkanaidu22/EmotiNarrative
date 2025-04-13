@@ -1,6 +1,7 @@
 EmotiNarrative
 Project for CMU 10335: Art & Machine Learning, Spring 2025
 
+```
 EmotiNarrative/
 ├── app/
 │   ├── static/
@@ -27,6 +28,7 @@ EmotiNarrative/
 ├── image_to_emotions.py
 ├── requirements.txt
 └── README.md
+```
 
 `text_to_emotions.py` - Analyzes emotions in written text using DistilBERT-base-uncased (https://huggingface.co/bhadresh-savani/distilbert-base-uncased-emotion)
 
