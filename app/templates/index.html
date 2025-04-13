@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmotiNarrative - Multimodal Emotion Dataset Creator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>EmotiNarrative</h1>
+            <p>Multimodal Emotion Dataset Creator</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="tabs">
+            <div class="tab active" data-target="text-upload">Text Analysis</div>
+            <div class="tab" data-target="image-upload">Image Analysis</div>
+            <div class="tab" data-target="dashboard-link">Dashboard</div>
+        </div>
+
+        <div id="text-upload" class="tab-content">
+            <div class="form-container">
+                <h2>Text Emotion Analysis</h2>
+                <p>Enter text to analyze its emotional content:</p>
+                
+                <form action="{{ url_for('upload') }}" method="post">
+                    <input type="hidden" name="content_type" value="text">
+                    
+                    <div class="form-group">
+                        <label for="text_content" class="form-label">Text Content:</label>
+                        <textarea name="text_content" id="text_content" class="form-control" rows="8" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Analyze Emotions</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="image-upload" class="tab-content" style="display: none;">
+            <div class="form-container">
+                <h2>Image Emotion Analysis</h2>
+                <p>Upload an image to analyze emotions in detected faces:</p>
+                
+                <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="content_type" value="image">
+                    
+                    <div class="form-group">
+                        <label for="image_file" class="form-label">Select Image:</label>
+                        <input type="file" name="image_file" id="image_file" class="form-control" accept="image/jpeg,image/png" required>
+                    </div>
+                    
+                    <div class="media-display">
+                        <img id="image_preview" src="#" alt="Preview" style="display: none; max-width: 100%; max-height: 300px;">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Analyze Emotions</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="dashboard-link" class="tab-content" style="display: none;">
+            <div class="form-container">
+                <h2>Emotion Analysis Dashboard</h2>
+                <p>View statistics and accuracy improvements of the emotion analysis models:</p>
+                
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>About EmotiNarrative</h3>
+            </div>
+            <div class="card-body">
+                <p>EmotiNarrative is a tool that analyzes emotional content across different modalities (text and images) and learns from your feedback to improve its accuracy over time.</p>
+                
+                <h4>How it works:</h4>
+                <ol>
+                    <li>Upload text or images with emotional content</li>
+                    <li>Our AI analyzes the emotions present</li>
+                    <li>You validate or correct the AI's analysis</li>
+                    <li>Your feedback improves the system for future analyses</li>
+                </ol>
+                
+                <p>The more content you analyze and validate, the smarter the system becomes!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>EmotiNarrative - Multimodal Emotion Dataset Creator</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

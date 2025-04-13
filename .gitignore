@@ -8,3 +8,4 @@ data/models/emotion_data.db
 __pycache__/
 *.py[cod]
 *$py.class
+

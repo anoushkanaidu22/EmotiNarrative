@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validate Emotions - EmotiNarrative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>EmotiNarrative</h1>
+            <p>Validate Emotion Analysis</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Analysis Results</h3>
+            </div>
+            <div class="card-body">
+                <div class="media-display">
+                    {% if data.media_type == 'image' %}
+                        <img src="{{ url_for('static', filename='uploads/' + data.media_path) }}" alt="Uploaded image">
+                    {% elif data.media_type == 'text' %}
+                        <div class="text-display">
+                            <!-- Simply display the text content passed from the route -->
+                            {{ data.text_content }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="chart-container">
+                    {% if data.media_type == 'text' %}
+                        <canvas id="text-emotions-chart"></canvas>
+                        <script id="emotions-data" type="application/json">{{ data.emotions|tojson }}</script>
+                    {% elif data.media_type == 'image' and data.emotions|length > 0 %}
+                        <h4>Detected Face Emotions:</h4>
+                        {% for face in data.emotions %}
+                            {% if face.emotion is defined %}
+                                <h5>Face {{ loop.index }}</h5>
+                                <div>
+                                    {% for emotion, value in face.emotion.items() %}
+                                        <div><strong>{{ emotion }}:</strong> {{ "%.2f"|format(value) }}%</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>No emotions detected.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h3>Validate Emotion Analysis</h3>
+            <p>Adjust the sliders to reflect the correct emotion intensities:</p>
+            
+            <form action="{{ url_for('submit_validation') }}" method="post">
+                <input type="hidden" name="analysis_id" value="{{ data.analysis_id }}">
+                
+                {% if data.media_type == 'text' %}
+                    {% for emotion, score in data.emotions.items() %}
+                        <div class="form-group">
+                            <label for="emotion_{{ emotion }}" class="form-label">{{ emotion|capitalize }}:</label>
+                            <div class="range-slider">
+                                <input type="range" id="emotion_{{ emotion }}" name="emotion_{{ emotion }}" 
+                                       min="0" max="100" value="{{ (score * 100)|int }}">
+                                <span class="range-value">{{ (score * 100)|int }}%</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% elif data.media_type == 'image' and data.emotions|length > 0 %}
+                    {% for emotion, score in data.emotions[0].emotion.items() %}
+                        <div class="form-group">
+                            <label for="emotion_{{ emotion }}" class="form-label">{{ emotion|capitalize }}:</label>
+                            <div class="range-slider">
+                                <input type="range" id="emotion_{{ emotion }}" name="emotion_{{ emotion }}" 
+                                       min="0" max="100" value="{{ score|int }}">
+                                <span class="range-value">{{ score|int }}%</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No emotions to validate.</p>
+                {% endif %}
+                
+                <button type="submit" class="btn btn-primary">Submit Validation</button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>EmotiNarrative - Multimodal Emotion Dataset Creator</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

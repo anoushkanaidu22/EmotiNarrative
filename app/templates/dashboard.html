@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EmotiNarrative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>EmotiNarrative</h1>
+            <p>Performance Dashboard</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-cards">
+            <div class="stat-card">
+                <h3>Total Uploads</h3>
+                <div class="stat-number">{{ stats.total_media }}</div>
+                <p>Media files processed</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Text Analyses</h3>
+                <div class="stat-number">{{ stats.total_text }}</div>
+                <p>Text samples analyzed</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Image Analyses</h3>
+                <div class="stat-number">{{ stats.total_image }}</div>
+                <p>Images analyzed</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>User Validations</h3>
+                <div class="stat-number">{{ stats.total_validations }}</div>
+                <p>Feedback provided</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Current Accuracy</h3>
+                <div class="stat-number">{{ "%.1f"|format(stats.avg_accuracy * 100) }}%</div>
+                <p>Model-human agreement</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Model Versions</h3>
+                <div class="stat-number">{{ stats.model_versions|length }}</div>
+                <p>Improvement iterations</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3>Model Accuracy Improvement</h3>
+            <canvas id="accuracy-chart"></canvas>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Model Version History</h3>
+            </div>
+            <div class="card-body">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Model Type</th>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Version</th>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Date Created</th>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for version in stats.model_versions %}
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ version.model_type }}</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ version.version }}</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ version.created_date }}</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ "%.1f"|format(version.accuracy * 100) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-container" style="text-align: center; margin-top: 20px;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>EmotiNarrative - Multimodal Emotion Dataset Creator</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
