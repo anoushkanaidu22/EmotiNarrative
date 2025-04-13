@@ -1,0 +1,12 @@
+flask
+werkzeug
+numpy
+scikit-learn
+joblib
+pillow
+opencv-python
+matplotlib
+transformers
+deepface
+torch
+tensorflow
