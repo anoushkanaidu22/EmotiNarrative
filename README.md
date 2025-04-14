@@ -1,6 +1,8 @@
 EmotiNarrative
 Project for CMU 10335: Art & Machine Learning, Spring 2025
 
+![preview screenshot](EmotiNarrative_screenshot.png)
+
 ```
 EmotiNarrative/
 ├── app/
